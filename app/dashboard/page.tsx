@@ -1,9 +1,9 @@
-import SignUpPage from './signup';
+import Dashboard from './dashboard';
 
 export default function Home() {
   return (
     <main>
-      <SignUpPage />
+      <Dashboard />
     </main>
   );
 }
