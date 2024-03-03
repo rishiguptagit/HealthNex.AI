@@ -22,15 +22,15 @@ export default function SignInPage() {
       return;
     }
 
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
     if (response.ok) {
-      localStorage.setItem('primaryKey', email);
-      router.push('/dashboard');
+      localStorage.setItem("primaryKey", email);
+      router.push("/dashboard");
     } else {
       const message = await response.text();
       alert(message);
@@ -102,14 +102,12 @@ export default function SignInPage() {
             </div>
           </div>
           <div>
-            <Link href = "/dashboard">
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-navy-600 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
-              >
-                Sign in
-              </button>
-            </Link>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-navy-600 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
+            >
+              Sign in
+            </button>
           </div>
         </form>
         <p className="mt-2 text-center text-sm text-gray-600">
