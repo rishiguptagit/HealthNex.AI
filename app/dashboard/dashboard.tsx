@@ -18,10 +18,11 @@ const dropDown = {
   alignItems: "center",
   width: "25%",
   padding: "15px",
-  paddingTop: "8px",
-  paddingBottom: "8px",
+  paddingTop: "7px",
+  paddingBottom: "7px",
   fontSize: "120%",
-  border: "5px solid #ccc"
+  border: "5px solid #ccc",
+  marginTop: "25px"
 };
 
 const options = {
