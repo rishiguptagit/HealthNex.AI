@@ -12,3 +12,21 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Patient {
+  email   String   @id @unique
+  fname   String
+  lname   String
+  sex     String
+  gender  String
+  sexual  String
+  race    String
+  Marital String
+}
+
+model Doctor {
+  email   String
+  fname   String
+  lname   String
+  
+}

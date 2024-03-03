@@ -1,7 +1,42 @@
-import React from "react";
+"use client";
+
+import React, { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SignInPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(event.target.value);
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setPassword(event.target.value);
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (!email || !password) {
+      alert("All fields are required");
+      return;
+    }
+
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      localStorage.setItem('primaryKey', email);
+      router.push('/dashboard');
+    } else {
+      const message = await response.text();
+      alert(message);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -15,7 +50,12 @@ export default function SignInPage() {
             Sign in to HealthNex.AI
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="/signin" method="post">
+        <form
+          className="mt-8 space-y-6"
+          action="/signin"
+          method="post"
+          onSubmit={handleSubmit}
+        >
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -30,6 +70,8 @@ export default function SignInPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-5 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg"
                 placeholder="Email Address"
+                value={email}
+                onChange={handleEmailChange}
               />
             </div>
             <div>
@@ -44,6 +86,8 @@ export default function SignInPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-5 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg"
                 placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
               />
             </div>
           </div>
