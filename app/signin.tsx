@@ -102,12 +102,14 @@ export default function SignInPage() {
             </div>
           </div>
           <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-navy-600 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
-            >
-              Sign in
-            </button>
+            <Link href = "/dashboard">
+              <button
+                type="submit"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-navy-600 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
+              >
+                Sign in
+              </button>
+            </Link>
           </div>
         </form>
         <p className="mt-2 text-center text-sm text-gray-600">
