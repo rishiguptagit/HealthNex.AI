@@ -25,4 +25,4 @@ export async function POST(request) {
         message: 'User created'
         }
     };
-}
+}   
