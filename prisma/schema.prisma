@@ -30,3 +30,15 @@ model Doctor {
   lname   String
   
 }
+
+model Appointments {
+  
+}
+
+model Insuarance {
+
+}
+
+model Prescription {
+  
+}

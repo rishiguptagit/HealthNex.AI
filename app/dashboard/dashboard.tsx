@@ -87,42 +87,65 @@ export default function PatientDashboard() {
         </button>
       </div>
 
+      {/* Body */}
       <div
         style={{
+          display: "flex",
+          justifyContent: "center",
           backgroundColor: "#1060d3",
           width: "100vw",
-          height: "100%",
+          height: "calc(100vh - 180px)",
         }}
       >
-        <p> . </p>
-      </div>
-
-      {/* Bottom */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          textAlign: "center",
-          fontSize: "0.875rem",
-          color: "#4A5568",
-          width: "100%",
-          paddingBottom: "1rem",
-          paddingTop: "1rem",
-          backgroundColor: "#EDF2F7",
-          height: "50xp",
-        }}
-      >
-        &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved. |{" "}
-        <Link
-          href="/privacypolicy"
-          className="text-gray-600 hover:text-navy-700"
+        <div
+          style={{
+            backgroundColor: "#dedede",
+            width: "85%",
+            height: "100%",
+          }}
         >
-          Privacy Policy
-        </Link>{" "}
-        |{" "}
-        <Link href="/termsofuse" className="text-gray-600 hover:text-navy-700">
-          Terms of Use
-        </Link>
+          <h1
+            style={{
+              paddingLeft: "20px",
+              paddingTop: "20px",
+              fontSize: "120%",
+              fontWeight: "bold",
+            }}
+          >
+            {" Welcome *patient.name*! "}
+          </h1>
+        </div>
+
+        {/* Bottom */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            textAlign: "center",
+            fontSize: "0.875rem",
+            color: "#4A5568",
+            width: "100%",
+            paddingBottom: "1rem",
+            paddingTop: "1rem",
+            backgroundColor: "#EDF2F7",
+            height: "50px",
+          }}
+        >
+          &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved. |{" "}
+          <Link
+            href="/privacypolicy"
+            className="text-gray-600 hover:text-navy-700"
+          >
+            Privacy Policy
+          </Link>{" "}
+          |{" "}
+          <Link
+            href="/termsofuse"
+            className="text-gray-600 hover:text-navy-700"
+          >
+            Terms of Use
+          </Link>
+        </div>
       </div>
     </div>
   );
