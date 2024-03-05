@@ -14,6 +14,7 @@ datasource db {
 }
 
 model Patient {
+  pat_id  int
   email   String   @id @unique
   fname   String
   lname   String
@@ -25,20 +26,30 @@ model Patient {
 }
 
 model Doctor {
-  email   String
-  fname   String
-  lname   String
+  doc_id      int
+  doc_email   String
+  doc_fname   String
+  doc_lname   String
   
 }
 
 model Appointments {
-  
+  doc_id      int
+  pat_id      int
+  visit_date  String
+  pres_id     int
 }
 
 model Insuarance {
-
+  insco_name  String
 }
 
 model Prescription {
-  
+  pres_id   int
+  meds      <med_id, int>
+}
+
+model Medicine {
+  med_id
+  med_name
 }
