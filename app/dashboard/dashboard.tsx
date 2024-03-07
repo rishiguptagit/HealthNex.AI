@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 
 const panelStyle = {
@@ -99,21 +99,85 @@ export default function PatientDashboard() {
       >
         <div
           style={{
-            backgroundColor: "#dedede",
+            justifyContent: "center",
+            backgroundColor: "#d8d8d8",
             width: "85%",
             height: "100%",
           }}
         >
-          <h1
+          {printWelcome()}
+
+          {/* Interior */}
+          <div
             style={{
-              paddingLeft: "20px",
-              paddingTop: "20px",
-              fontSize: "120%",
-              fontWeight: "bold",
+              width: "85%",
+              marginTop: "25px",
+              marginLeft: "30px",
+              padding: "10px",
+              border: "1px solid",
+              borderColor: "grey",
             }}
           >
-            {" Welcome *patient.name*! "}
-          </h1>
+            <div
+              style={{
+                backgroundColor: "#f2f2f2",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "5px",
+              }}
+            >
+              <p>Name: </p>
+              <p>First Last</p>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#e5e5e5",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "5px",
+              }}
+            >
+              <p>Sex: </p>
+              <p>*something*</p>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#f2f2f2",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "5px",
+              }}
+            >
+              <p>Email: </p>
+              <p>firstlast@email.com</p>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#e5e5e5",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "5px",
+              }}
+            >
+              <p>Race: </p>
+              <p>*something*</p>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#f2f2f2",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "5px",
+              }}
+            >
+              <p>Marital: </p>
+              <p>*something*</p>
+            </div>
+          </div>
         </div>
 
         {/* Bottom */}
@@ -148,5 +212,20 @@ export default function PatientDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+function printWelcome() {
+  return (
+    <h1
+      style={{
+        paddingLeft: "20px",
+        paddingTop: "20px",
+        fontSize: "120%",
+        fontWeight: "bold",
+      }}
+    >
+      {" Welcome *patient.name*! "}
+    </h1>
   );
 }
