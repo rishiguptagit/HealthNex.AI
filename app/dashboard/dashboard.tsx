@@ -69,7 +69,7 @@ export default function PatientDashboard() {
 
       {/* Additional Functionality */}
       <div
-        style={{ ...panelStyle, marginTop: "20px", backgroundColor: "#e8e8e8" }}
+        style={{ ...panelStyle, marginTop: "20px", backgroundColor: "#d8d8d8" }}
       >
         <button style={{ marginLeft: "40px" }}>
           <div style={button}>
@@ -100,84 +100,13 @@ export default function PatientDashboard() {
         <div
           style={{
             justifyContent: "center",
-            backgroundColor: "#d8d8d8",
+            backgroundColor: "#e1e1e1",
             width: "85%",
             height: "100%",
           }}
         >
           {printWelcome()}
-
-          {/* Interior */}
-          <div
-            style={{
-              width: "85%",
-              marginTop: "25px",
-              marginLeft: "30px",
-              padding: "10px",
-              border: "1px solid",
-              borderColor: "grey",
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "#f2f2f2",
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "5px",
-              }}
-            >
-              <p>Name: </p>
-              <p>First Last</p>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: "#e5e5e5",
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "5px",
-              }}
-            >
-              <p>Sex: </p>
-              <p>*something*</p>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: "#f2f2f2",
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "5px",
-              }}
-            >
-              <p>Email: </p>
-              <p>firstlast@email.com</p>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: "#e5e5e5",
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "5px",
-              }}
-            >
-              <p>Race: </p>
-              <p>*something*</p>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: "#f2f2f2",
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "5px",
-              }}
-            >
-              <p>Marital: </p>
-              <p>*something*</p>
-            </div>
-          </div>
+          {personalInformation()}
         </div>
 
         {/* Bottom */}
@@ -227,5 +156,57 @@ function printWelcome() {
     >
       {" Welcome *patient.name*! "}
     </h1>
+  );
+}
+
+const div1 = {
+  backgroundColor: "#f2f2f2",
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "5px",
+};
+
+const div2 = {
+  backgroundColor: "#e5e5e5",
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "5px",
+};
+
+function personalInformation() {
+  return (
+    <div
+      style={{
+        width: "90%",
+        marginTop: "25px",
+        marginLeft: "30px",
+        padding: "10px",
+      }}
+    >
+      <div style={div1}>
+        <p>Name: </p>
+        <p>First Last</p>
+      </div>
+
+      <div style={div2}>
+        <p>Sex: </p>
+        <p>*something*</p>
+      </div>
+
+      <div style={div1}>
+        <p>Email: </p>
+        <p>*something*</p>
+      </div>
+
+      <div style={div2}>
+        <p>Race: </p>
+        <p>*something*</p>
+      </div>
+
+      <div style={div1}>
+        <p>Marital: </p>
+        <p>*something*</p>
+      </div>
+    </div>
   );
 }
