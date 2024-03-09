@@ -1,7 +1,49 @@
-import React from "react";
+'use client';
+
+import React, { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function SignInPage() {
+export default function SignUpPage() {
+  const router = useRouter();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFirstName(event.target.value);
+  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setLastName(event.target.value);
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(event.target.value);
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setPassword(event.target.value);
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (!firstName || !lastName || !email || !password) {
+      alert("All fields are required");
+      return;
+    }
+
+    const response = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName, lastName, email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem("primaryKey", email);
+      router.push("/signup/profile");
+    } else {
+      alert(data.message);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -15,7 +57,7 @@ export default function SignInPage() {
             Create an account at HealthNex.AI
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="/signin" method="post">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -30,6 +72,8 @@ export default function SignInPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-5 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg"
                 placeholder="First Name"
+                value={firstName}
+                onChange={handleFirstNameChange}
               />
             </div>
             <div>
@@ -44,6 +88,8 @@ export default function SignInPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-5 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg"
                 placeholder="Last Name"
+                value={lastName}
+                onChange={handleLastNameChange}
               />
             </div>
             <div>
@@ -58,6 +104,8 @@ export default function SignInPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-5 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg"
                 placeholder="Email Address"
+                value={email}
+                onChange={handleEmailChange}
               />
             </div>
             <div>
@@ -72,16 +120,18 @@ export default function SignInPage() {
                 required
                 className="appearance-none rounded-none relative block w-full px-5 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-navy-500 focus:border-navy-500 focus:z-10 sm:text-lg"
                 placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
               />
             </div>
           </div>
           <div>
-            <Link href="/signup/profile"
+            <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-navy-600 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
             >
               Sign up
-            </Link>
+            </button>
           </div>
         </form>
         <p className="mt-2 text-center text-sm text-gray-600">

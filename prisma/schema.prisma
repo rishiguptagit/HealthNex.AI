@@ -13,46 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Patient {
-  pat_id  int
-  email   String   @id @unique
-  fname   String
-  lname   String
-  sex     String
-  gender  String
-  sexual  String
-  race    String
-  Marital String
-}
-
-model Doctor {
-  doc_id      Int     @id
-  doc_email   String
-  doc_fname   String
-  doc_lname   String
-  
-}
-
-model Appointments {
-  app_id      Int     @id
-  doc_id      Int
-  pat_id      Int
-  visit_date  DateTime
-  pres_id     Int
-}
-
-model Insuarance {
-  insco_id    Int     @id
-  insco_name  String  
-  // can have more attributes
-}
-
-model Prescription {
-  pres_id   Int   @id
-  meds      JSON  // to store medicine info and quantity prescribed
-}
-
-model Medicine {
-  med_id    Int   @id
-  med_name  String
+model patient {
+  email     String  @id @unique
+  password  String
+  firstName String
+  lastName  String
+  sex       String
+  gender    String
+  sexual    String
+  race      String
+  marital   String
 }

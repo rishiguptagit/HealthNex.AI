@@ -22,20 +22,21 @@ export default function SignInPage() {
       return;
     }
 
-    const response = await fetch("/api/login", {
+    const response = await fetch("/api/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
+    const data = await response.json();
+
     if (response.ok) {
       localStorage.setItem("primaryKey", email);
       router.push("/dashboard");
     } else {
-      const message = await response.text();
-      alert(message);
+      alert(data.message);
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -52,8 +53,6 @@ export default function SignInPage() {
         </div>
         <form
           className="mt-8 space-y-6"
-          action="/signin"
-          method="post"
           onSubmit={handleSubmit}
         >
           <input type="hidden" name="remember" value="true" />
