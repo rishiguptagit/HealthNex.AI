@@ -18,9 +18,9 @@ model patient {
   password  String
   firstName String
   lastName  String
-  sex       String
-  gender    String
-  sexual    String
-  race      String
-  marital   String
+  sex       String?
+  gender    String?
+  sexual    String?
+  race      String?
+  marital   String?
 }
