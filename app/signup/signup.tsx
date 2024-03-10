@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -38,9 +40,18 @@ export default function SignUpPage() {
 
     if (response.ok) {
       localStorage.setItem("primaryKey", email);
-      router.push("/signup/profile");
+      toast.success("Signup successful!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
     } else {
-      alert(data.message);
+      toast.error(data.message, {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
   };
 

@@ -13,14 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model patient {
+model Patient {
   email     String  @id @unique
   password  String
   firstName String
   lastName  String
+  dob       DateTime?
   sex       String?
   gender    String?
   sexual    String?
   race      String?
   marital   String?
+  insurance Insurance?
+  appointments Appointment[]
+}
+
+model Insurance {
+  id            String  @id @unique
+  provider      String
+  patientEmail  String  @unique @map("patient_email")
+  patient       Patient @relation(fields: patientEmail, references: email)
+}
+
+model Appointment {
+  id            Int      @id @default(autoincrement())
+  symptoms      String[]
+  date          DateTime
+  patientEmail  String   @unique @map("patient_email")
+  patient       Patient  @relation(fields: patientEmail, references: email)
+  doctorEmail   String   @unique @map("doctor_email")
+  doctor        Doctor   @relation(fields: doctorEmail, references: email)
+}
+
+model Doctor {
+  email        String  @id @unique
+  specialty    String
+  appointments Appointment[]
 }

@@ -3,6 +3,8 @@
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -32,11 +34,20 @@ export default function SignInPage() {
 
     if (response.ok) {
       localStorage.setItem("primaryKey", email);
-      router.push("/dashboard");
+      toast.success("Login successful!", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
     } else {
-      alert(data.message);
+      toast.error(data.message, {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -51,10 +62,7 @@ export default function SignInPage() {
             Sign in to HealthNex.AI
           </h2>
         </div>
-        <form
-          className="mt-8 space-y-6"
-          onSubmit={handleSubmit}
-        >
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
