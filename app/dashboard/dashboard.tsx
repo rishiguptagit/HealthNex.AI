@@ -329,7 +329,12 @@ export default function PatientDashboard() {
                     </Button>
                   </div>
                 }
-                style={{ marginTop: 0, height: "500px", overflow: "auto" }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: "10px",
+                  width: "100%",
+                }}
               >
                 {Array.isArray(appointments) ? (
                   appointments.map((appointment: any, index: number) => (
@@ -422,7 +427,7 @@ export default function PatientDashboard() {
                     {isEditing ? "Save" : "Edit"}
                   </Button>
                 }
-                style={{ marginTop: -80 }}
+                style={{ position: "absolute", right: 0 }}
               >
                 {isEditing ? (
                   <Form form={form} layout="vertical" initialValues={patient}>
