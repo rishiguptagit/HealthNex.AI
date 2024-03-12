@@ -101,16 +101,6 @@ export default function SignInPage() {
               />
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <Link
-                href="forgotpassword"
-                className="font-medium text-navy-500 hover:text-navy-700"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-          </div>
           <div>
             <button
               type="submit"
