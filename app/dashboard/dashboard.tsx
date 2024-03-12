@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { PulseLoader } from "react-spinners";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import {
   Layout,
@@ -26,13 +27,21 @@ const { Option } = Select;
 export default function PatientDashboard() {
   const [patient, setPatient] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState(false); // Add this line
-  const email = localStorage.getItem("primaryKey");
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasInsurance, setHasInsurance] = useState(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [doctors, setDoctors] = useState([]);
-  const [insurance, setInsurance] = useState([]);
+  const [insurance, setInsurance] = useState<{
+    provider: string | null;
+    id: string | null;
+  } | null>(null);
+
+  let email: string | null = null;
+
+  if (typeof window !== "undefined") {
+    const email = localStorage.getItem("primaryKey");
+  }
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -45,7 +54,6 @@ export default function PatientDashboard() {
     }
 
     const { provider, id, ...appointmentDetails } = values;
-    
 
     try {
       const response = await fetch("/api/dashboard-appointment", {
@@ -144,41 +152,45 @@ export default function PatientDashboard() {
     }
   };
 
-  const fetchPatientData = async () => {
-    const responsePatient = await fetch(
-      `/api/dashboard-patient?email=${encodeURIComponent(email)}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
+  const fetchPatientData = useCallback(async () => {
+    if (email) {
+      const responsePatient = await fetch(
+        `/api/dashboard-patient?email=${encodeURIComponent(email)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!responsePatient.ok) {
+        throw new Error(`HTTP error! status: ${responsePatient.status}`);
       }
-    );
 
-    if (!responsePatient.ok) {
-      throw new Error(`HTTP error! status: ${responsePatient.status}`);
+      const dataPatient = await responsePatient.json();
+      setPatient(dataPatient);
     }
+  }, [email]);
 
-    const dataPatient = await responsePatient.json();
-    setPatient(dataPatient);
-  };
+  const fetchAppointments = useCallback(async () => {
+    if (email) {
+      const responseAppointments = await fetch(
+        `/api/dashboard-appointment?email=${encodeURIComponent(email)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-  const fetchAppointments = async () => {
-    const responseAppointments = await fetch(
-      `/api/dashboard-appointment?email=${encodeURIComponent(email)}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
+      if (!responseAppointments.ok) {
+        throw new Error(`HTTP error! status: ${responseAppointments.status}`);
       }
-    );
 
-    if (!responseAppointments.ok) {
-      throw new Error(`HTTP error! status: ${responseAppointments.status}`);
+      const appointments = await responseAppointments.json();
+      setAppointments(appointments);
     }
+  }, [email]);
 
-    const appointments = await responseAppointments.json();
-    setAppointments(appointments);
-  };
-
-  const fetchDoctors = async () => {
+  const fetchDoctors = useCallback(async () => {
     const responseDoctors = await fetch(`/api/dashboard-doctor`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -190,24 +202,26 @@ export default function PatientDashboard() {
 
     const doctors = await responseDoctors.json();
     setDoctors(doctors);
-  };
+  }, []);
 
-  const fetchInsurance = async () => {
-    const responseInsurance = await fetch(
-      `/api/dashboard-insurance?email=${encodeURIComponent(email)}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
+  const fetchInsurance = useCallback(async () => {
+    if (email) {
+      const responseInsurance = await fetch(
+        `/api/dashboard-insurance?email=${encodeURIComponent(email)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!responseInsurance.ok) {
+        throw new Error(`HTTP error! status: ${responseInsurance.status}`);
       }
-    );
 
-    if (!responseInsurance.ok) {
-      throw new Error(`HTTP error! status: ${responseInsurance.status}`);
+      const insurance = await responseInsurance.json();
+      setInsurance(insurance);
     }
-
-    const insurance = await responseInsurance.json();
-    setInsurance(insurance);
-  };
+  }, [email]);
 
   useEffect(() => {
     if (email) {
@@ -222,7 +236,13 @@ export default function PatientDashboard() {
     } else {
       console.error("No email found in local storage");
     }
-  }, [email]);
+  }, [
+    email,
+    fetchPatientData,
+    fetchAppointments,
+    fetchInsurance,
+    fetchDoctors,
+  ]);
 
   if (!patient) {
     return (
@@ -238,11 +258,9 @@ export default function PatientDashboard() {
           backgroundColor: "white",
         }}
       >
-        <img
-          src="./healthnex.jpg"
-          alt="Wellnex logo"
-          style={{ marginBottom: "20px" }}
-        />
+        <div style={{ marginBottom: "20px" }}>
+          <Image src="./healthnex.jpg" alt="Wellnex logo" />
+        </div>
         <PulseLoader color="#888" />
       </div>
     );
@@ -268,10 +286,11 @@ export default function PatientDashboard() {
             alignItems: "center",
           }}
         >
-          <img
+          <Image
             src="/healthnex.jpg"
             alt="HealthNex.AI"
-            style={{ width: "50px", marginRight: "10px" }}
+            width={50}
+            height={50}
           />
           HealthNex.AI
         </Typography.Title>
@@ -305,7 +324,7 @@ export default function PatientDashboard() {
                     </Button>
                   </div>
                 }
-                style={{ marginTop: 0 }}
+                style={{ marginTop: 0, height: "500px", overflow: "auto" }}
               >
                 {Array.isArray(appointments) ? (
                   appointments.map((appointment: any, index: number) => (
@@ -360,13 +379,13 @@ export default function PatientDashboard() {
                       <Form.Item label="Insurance Provider" name="provider">
                         <Input
                           placeholder="Enter Insurance Provider Name"
-                          defaultValue={insurance?.provider}
+                          defaultValue={insurance?.provider || ""}
                         />
                       </Form.Item>
                       <Form.Item label="Insurance ID" name="id">
                         <Input
                           placeholder="Enter Insurance ID"
-                          defaultValue={insurance?.id}
+                          defaultValue={insurance?.id || ""}
                         />
                       </Form.Item>
                     </>
@@ -503,9 +522,7 @@ export default function PatientDashboard() {
       </Content>
       <Footer style={{ textAlign: "center" }}>
         {"© "}
-        {new Date().getFullYear()} HealthNex.AI. All rights reserved. |{" "}
-        <a href="/privacypolicy">Privacy Policy</a> |{" "}
-        <a href="/termsofuse">Terms of Use</a>
+        {new Date().getFullYear()} HealthNex.AI. All rights reserved.
       </Footer>
     </Layout>
   );

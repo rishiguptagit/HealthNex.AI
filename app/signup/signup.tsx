@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -59,7 +60,7 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <img
+          <Image
             className="mx-auto h-20 w-auto"
             src="/healthnex.jpg"
             alt="WellNex.AI"
@@ -156,17 +157,7 @@ export default function SignUpPage() {
         </p>
       </div>
       <div className="absolute bottom-0 text-center text-sm text-gray-600 w-full pb-4 pt-4 bg-gray-300">
-        &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved. |{" "}
-        <Link
-          href="/privacypolicy"
-          className="text-gray-600 hover:text-navy-700"
-        >
-          Privacy Policy
-        </Link>{" "}
-        |{" "}
-        <Link href="/termsofuse" className="text-gray-600 hover:text-navy-700">
-          Terms of Use
-        </Link>
+        &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved.
       </div>
     </div>
   );

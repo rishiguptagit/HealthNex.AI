@@ -1,0 +1,4 @@
+.appointment-box, .form-box {
+    height: 500px; /* Adjust this value to suit your needs */
+    overflow: auto;
+}
