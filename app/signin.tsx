@@ -58,6 +58,8 @@ export default function SignInPage() {
             className="mx-auto h-20 w-auto"
             src="/healthnex.jpg"
             alt="WellNex.AI"
+            width={500}
+            height={300}
           />
           <h2 className="mt-6 text-center text-2xl font-medium text-gray-900">
             Sign in to HealthNex.AI

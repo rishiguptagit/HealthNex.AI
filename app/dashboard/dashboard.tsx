@@ -40,7 +40,7 @@ export default function PatientDashboard() {
   let email: string | null = null;
 
   if (typeof window !== "undefined") {
-    const email = localStorage.getItem("primaryKey");
+    email = localStorage.getItem("primaryKey");
   }
 
   const showModal = () => {
@@ -259,7 +259,12 @@ export default function PatientDashboard() {
         }}
       >
         <div style={{ marginBottom: "20px" }}>
-          <Image src="./healthnex.jpg" alt="Wellnex logo" />
+          <Image
+            src="/healthnex.jpg"
+            alt="Wellnex logo"
+            width={50}
+            height={30}
+          />
         </div>
         <PulseLoader color="#888" />
       </div>
