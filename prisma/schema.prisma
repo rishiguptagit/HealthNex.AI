@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,39 +8,40 @@ datasource db {
 }
 
 model Patient {
-  email     String  @id @unique
-  password  String
-  firstName String
-  lastName  String
-  dob       DateTime?
-  sex       String?
-  gender    String?
-  sexual    String?
-  race      String?
-  marital   String?
-  insurance Insurance?
+  email        String       @id @unique
+  password     String
+  firstName    String
+  lastName     String
+  sex          String?
+  gender       String?
+  sexual       String?
+  race         String?
+  marital      String?
   appointments Appointment[]
+  insurance    Insurance?
 }
 
 model Insurance {
-  id            String  @id @unique
-  provider      String
-  patientEmail  String  @unique @map("patient_email")
-  patient       Patient @relation(fields: patientEmail, references: email)
+  id           String  @id @unique
+  provider     String
+  patientEmail String  @unique @map("patient_email")
+  patient      Patient @relation(fields: [patientEmail], references: [email])
 }
 
 model Appointment {
-  id            Int      @id @default(autoincrement())
-  symptoms      String[]
-  date          DateTime
-  patientEmail  String   @unique @map("patient_email")
-  patient       Patient  @relation(fields: patientEmail, references: email)
-  doctorEmail   String   @unique @map("doctor_email")
-  doctor        Doctor   @relation(fields: doctorEmail, references: email)
+  id           Int      @id @default(autoincrement())
+  symptoms     String[]
+  time         DateTime
+  patientEmail String   @map("patient_email")
+  doctorEmail  String   @map("doctor_email")
+  description  String
+  doctor       Doctor   @relation(fields: [doctorEmail], references: [email])
+  patient      Patient  @relation(fields: [patientEmail], references: [email])
 }
 
 model Doctor {
-  email        String  @id @unique
+  email        String       @id @unique
   specialty    String
+  name         String
   appointments Appointment[]
 }

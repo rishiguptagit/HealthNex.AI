@@ -16,12 +16,39 @@ export async function GET(req: NextRequest) {
 
     if (!appointments || appointments.length === 0) {
       return NextResponse.json(
-        { message: "No appointments found for this patient" },
-        { status: 404 }
+        { message: "No appointments found for this patient", appointments: [] },
+        { status: 200 }
       );
     }
 
     return NextResponse.json(appointments, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const { patientEmail, appointmentDetails } = await req.json();
+
+  console.log(patientEmail);
+  console.log(appointmentDetails);
+
+  if (!patientEmail || !appointmentDetails) {
+    return NextResponse.json({ message: "Patient Email and appointment details are required" }, { status: 400 });
+  }
+
+  try {
+    const appointment = await db.appointment.create({
+      data: {
+        patientEmail: patientEmail,
+        ...appointmentDetails
+      },
+    });
+
+    return NextResponse.json(appointment, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { message: "Internal Server Error" },

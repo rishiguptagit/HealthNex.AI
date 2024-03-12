@@ -1,6 +1,8 @@
 "use client";
 
+import { PulseLoader } from "react-spinners";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   Layout,
   Button,
@@ -16,6 +18,7 @@ import {
   Modal,
 } from "antd";
 import moment from "moment";
+import Link from "next/link";
 
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
@@ -27,13 +30,81 @@ export default function PatientDashboard() {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasInsurance, setHasInsurance] = useState(null);
-  const [appointments, setAppointments] = useState<any | null>(null);
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState([]);
+  const [insurance, setInsurance] = useState([]);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleAppointmentSubmit = async () => {
+    const values = form.getFieldsValue();
+    if (values.symptoms) {
+      values.symptoms = values.symptoms.split(/[\s,]+/).filter(Boolean);
+    }
+
+    const { provider, id, ...appointmentDetails } = values;
+    
+
+    try {
+      const response = await fetch("/api/dashboard-appointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientEmail: email,
+          appointmentDetails: appointmentDetails,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Appointment created successfully!", {
+          position: "top-center",
+          autoClose: 5000,
+        });
+      } else {
+        const errorData = await response.json();
+        toast.error(
+          `Failed to create appointment! ${errorData.message || ""}`,
+          {
+            position: "top-center",
+            autoClose: 5000,
+          }
+        );
+      }
+    } catch (error) {
+      toast.error("An error occurred while creating the appointment.", {
+        position: "top-center",
+        autoClose: 5000,
+      });
+    }
+    if (insurance === null && provider && id) {
+      // Make a POST request to the insurance API endpoint
+      const insuranceResponse = await fetch("/api/insurance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: provider,
+          id: id,
+          patientEmail: email,
+        }),
+      });
+
+      if (!insuranceResponse.ok) {
+        const errorData = await insuranceResponse.json();
+        toast.error(`Failed to add insurance! ${errorData.message || ""}`, {
+          position: "top-center",
+          autoClose: 5000,
+        });
+        fetchInsurance();
+      } else {
+        toast.success("Insurance added successfully!", {
+          position: "top-center",
+          autoClose: 5000,
+        });
+      }
+    }
+    fetchAppointments();
     setIsModalVisible(false);
   };
 
@@ -60,56 +131,97 @@ export default function PatientDashboard() {
       const data = await response.json();
       setPatient(data);
       setIsEditing(false);
+      toast.success("Save successful!", {
+        position: "top-center",
+        autoClose: 1000,
+      });
     } else {
-      // Handle error
+      const errorData = await response.json();
+      toast.error(`Save failed! ${errorData.message || ""}`, {
+        position: "top-center",
+        autoClose: 5000,
+      });
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (email) {
-        try {
-          // Fetch patient data
-          const responsePatient = await fetch(
-            `/api/dashboard-patient?email=${encodeURIComponent(email)}`,
-            {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-
-          if (!responsePatient.ok) {
-            throw new Error(`HTTP error! status: ${responsePatient.status}`);
-          }
-
-          const dataPatient = await responsePatient.json();
-          setPatient(dataPatient);
-
-          // Fetch appointments
-          const responseAppointments = await fetch(
-            `/api/dashboard-appointment?email=${encodeURIComponent(email)}`,
-            {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-
-          if (!responseAppointments.ok) {
-            throw new Error(
-              `HTTP error! status: ${responseAppointments.status}`
-            );
-          }
-
-          const dataAppointments = await responseAppointments.json();
-          setAppointments(dataAppointments);
-        } catch (error) {
-          console.error(error);
-        }
-      } else {
-        console.error("No email found in local storage");
+  const fetchPatientData = async () => {
+    const responsePatient = await fetch(
+      `/api/dashboard-patient?email=${encodeURIComponent(email)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       }
-    };
-    fetchData();
+    );
+
+    if (!responsePatient.ok) {
+      throw new Error(`HTTP error! status: ${responsePatient.status}`);
+    }
+
+    const dataPatient = await responsePatient.json();
+    setPatient(dataPatient);
+  };
+
+  const fetchAppointments = async () => {
+    const responseAppointments = await fetch(
+      `/api/dashboard-appointment?email=${encodeURIComponent(email)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!responseAppointments.ok) {
+      throw new Error(`HTTP error! status: ${responseAppointments.status}`);
+    }
+
+    const appointments = await responseAppointments.json();
+    setAppointments(appointments);
+  };
+
+  const fetchDoctors = async () => {
+    const responseDoctors = await fetch(`/api/dashboard-doctor`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!responseDoctors.ok) {
+      throw new Error(`HTTP error! status: ${responseDoctors.status}`);
+    }
+
+    const doctors = await responseDoctors.json();
+    setDoctors(doctors);
+  };
+
+  const fetchInsurance = async () => {
+    const responseInsurance = await fetch(
+      `/api/dashboard-insurance?email=${encodeURIComponent(email)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!responseInsurance.ok) {
+      throw new Error(`HTTP error! status: ${responseInsurance.status}`);
+    }
+
+    const insurance = await responseInsurance.json();
+    setInsurance(insurance);
+  };
+
+  useEffect(() => {
+    if (email) {
+      try {
+        fetchPatientData();
+        fetchAppointments();
+        fetchInsurance();
+        fetchDoctors();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.error("No email found in local storage");
+    }
   }, [email]);
 
   if (!patient) {
@@ -117,14 +229,21 @@ export default function PatientDashboard() {
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
           fontSize: "2em",
           color: "#888",
+          backgroundColor: "white",
         }}
       >
-        Loading...
+        <img
+          src="./healthnex.jpg"
+          alt="Wellnex logo"
+          style={{ marginBottom: "20px" }}
+        />
+        <PulseLoader color="#888" />
       </div>
     );
   }
@@ -156,9 +275,11 @@ export default function PatientDashboard() {
           />
           HealthNex.AI
         </Typography.Title>
-        <Button type="link" style={{ color: "white" }}>
-          Logout
-        </Button>
+        <Link href="/">
+          <Button type="link" style={{ color: "white" }}>
+            Logout
+          </Button>
+        </Link>
       </Header>
       <Content style={{ padding: "0 50px", marginTop: 64 }}>
         <div style={{ background: "#fff", padding: 24, minHeight: 380 }}>
@@ -186,24 +307,46 @@ export default function PatientDashboard() {
                 }
                 style={{ marginTop: 0 }}
               >
-                Some content
+                {Array.isArray(appointments) ? (
+                  appointments.map((appointment: any, index: number) => (
+                    <p key={index}>
+                      {moment(appointment.time).format(
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}{" "}
+                      - {appointment.description}
+                    </p>
+                  ))
+                ) : (
+                  <p>No appointments found</p>
+                )}
               </Card>
 
               <Modal
                 title="Make an appointment"
                 visible={isModalVisible}
-                onOk={handleOk}
+                onOk={handleAppointmentSubmit}
                 onCancel={handleCancel}
+                okButtonProps={{
+                  style: {
+                    backgroundColor: "navy",
+                    borderColor: "navy",
+                    color: "white",
+                  },
+                }}
               >
                 <Form form={form}>
-                  <Form.Item label="Date and time">
+                  <Form.Item label="Appointment Description" name="description">
+                    <Input placeholder="Enter appointment description" />
+                  </Form.Item>
+                  <Form.Item label="Time" name="time">
                     <DatePicker
+                      className="custom-datepicker"
                       showTime={{ format: "HH:mm", use12Hours: true }}
                       format="YYYY-MM-DD h:mm a"
                       placeholder="Enter the date and time of the appointment"
                     />
                   </Form.Item>
-                  <Form.Item label="Do you have insurance?">
+                  <Form.Item label="Do you have insurance">
                     <Select
                       placeholder="Select"
                       onChange={handleInsuranceChange}
@@ -214,16 +357,31 @@ export default function PatientDashboard() {
                   </Form.Item>
                   {hasInsurance === "yes" && (
                     <>
-                      <Form.Item label="Insurance Provider">
-                        <Input placeholder="Enter Insurance Provider Name" />
+                      <Form.Item label="Insurance Provider" name="provider">
+                        <Input
+                          placeholder="Enter Insurance Provider Name"
+                          defaultValue={insurance?.provider}
+                        />
                       </Form.Item>
-                      <Form.Item label="Insurance ID">
-                        <Input placeholder="Enter Insurance ID" />
+                      <Form.Item label="Insurance ID" name="id">
+                        <Input
+                          placeholder="Enter Insurance ID"
+                          defaultValue={insurance?.id}
+                        />
                       </Form.Item>
                     </>
                   )}
-                  <Form.Item label="Symptoms">
+                  <Form.Item label="Symptoms" name="symptoms">
                     <Input.TextArea placeholder="Enter your symptoms" />
+                  </Form.Item>
+                  <Form.Item label="Choose Doctor" name="doctorEmail">
+                    <Select placeholder="Select">
+                      {doctors.map((doctor: any, index: number) => (
+                        <Option key={index} value={doctor.email}>
+                          {doctor.name} - {doctor.specialty}
+                        </Option>
+                      ))}
+                    </Select>
                   </Form.Item>
                 </Form>
               </Modal>
@@ -252,19 +410,19 @@ export default function PatientDashboard() {
                     </Form.Item>
                     <Form.Item label="Legal Sex" name="sex">
                       <Select defaultValue={patient?.sex}>
-                        <Select.Option value="male">Male</Select.Option>
-                        <Select.Option value="female">Female</Select.Option>
+                        <Select.Option value="Male">Male</Select.Option>
+                        <Select.Option value="Female">Female</Select.Option>
                       </Select>
                     </Form.Item>
                     <Form.Item label="Gender Identity" name="gender">
                       <Select defaultValue={patient?.gender}>
-                        <Select.Option value="man">Man</Select.Option>
-                        <Select.Option value="woman">Woman</Select.Option>
-                        <Select.Option value="agender">Agender</Select.Option>
-                        <Select.Option value="transgender">
+                        <Select.Option value="Man">Man</Select.Option>
+                        <Select.Option value="Woman">Woman</Select.Option>
+                        <Select.Option value="Agender">Agender</Select.Option>
+                        <Select.Option value="Transgender">
                           Transgender
                         </Select.Option>
-                        <Select.Option value="genderqueer">
+                        <Select.Option value="Genderqueer">
                           Genderqueer
                         </Select.Option>
                       </Select>
@@ -274,14 +432,14 @@ export default function PatientDashboard() {
                         <Select.Option value="heterosexual">
                           Heterosexual
                         </Select.Option>
-                        <Select.Option value="bisexual">Bisexual</Select.Option>
-                        <Select.Option value="homosexual">
+                        <Select.Option value="Bisexual">Bisexual</Select.Option>
+                        <Select.Option value="Homosexual">
                           Homosexual
                         </Select.Option>
-                        <Select.Option value="pansexual">
+                        <Select.Option value="Pansexual">
                           Pansexual
                         </Select.Option>
-                        <Select.Option value="asexual">Asexual</Select.Option>
+                        <Select.Option value="Asexual">Asexual</Select.Option>
                       </Select>
                     </Form.Item>
                     <Form.Item label="Race Identity" name="race">
@@ -289,20 +447,20 @@ export default function PatientDashboard() {
                         <Select.Option value="americanindian">
                           American Indian
                         </Select.Option>
-                        <Select.Option value="asian">Asian</Select.Option>
-                        <Select.Option value="african">
+                        <Select.Option value="Asian">Asian</Select.Option>
+                        <Select.Option value="African">
                           Black or African American
                         </Select.Option>
-                        <Select.Option value="white">White</Select.Option>
-                        <Select.Option value="hawaiian">
+                        <Select.Option value="White">White</Select.Option>
+                        <Select.Option value="Hawaiian">
                           Native Hawaiian
                         </Select.Option>
                       </Select>
                     </Form.Item>
                     <Form.Item label="Marital Status" name="marital">
                       <Select defaultValue={patient?.marital}>
-                        <Select.Option value="married">Married</Select.Option>
-                        <Select.Option value="unmarried">
+                        <Select.Option value="Married">Married</Select.Option>
+                        <Select.Option value="Unmarried">
                           Unmarried
                         </Select.Option>
                       </Select>
@@ -330,6 +488,11 @@ export default function PatientDashboard() {
                     </Descriptions.Item>
                     <Descriptions.Item label="Marital Status">
                       {patient?.marital}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Insurance">
+                      {patient?.insurance
+                        ? `ID: ${patient.insurance.id}, Company: ${patient.insurance.company}`
+                        : "No insurance information on file"}
                     </Descriptions.Item>
                   </Descriptions>
                 )}
