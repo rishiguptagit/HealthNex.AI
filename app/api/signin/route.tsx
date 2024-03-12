@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { db } from "../../../lib/db";
+import { db } from "../db";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -12,13 +12,13 @@ export async function POST(req: Request) {
     });
 
     if (!existingUser) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
 
     if (!isPasswordValid) {
       return NextResponse.json(

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../lib/db";
+import { db } from "../db";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -37,14 +37,17 @@ export async function POST(req: NextRequest) {
   console.log(appointmentDetails);
 
   if (!patientEmail || !appointmentDetails) {
-    return NextResponse.json({ message: "Patient Email and appointment details are required" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Patient Email and appointment details are required" },
+      { status: 400 }
+    );
   }
 
   try {
     const appointment = await db.appointment.create({
       data: {
         patientEmail: patientEmail,
-        ...appointmentDetails
+        ...appointmentDetails,
       },
     });
 
