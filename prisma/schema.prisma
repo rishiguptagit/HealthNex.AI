@@ -19,6 +19,7 @@ model Patient {
   marital      String?
   appointments Appointment[]
   insurance    Insurance?
+  bills        Bill[]
 }
 
 model Insurance {
@@ -44,4 +45,12 @@ model Doctor {
   specialty    String
   name         String
   appointments Appointment[]
+}
+
+model Bill {
+  id           Int      @id @default(autoincrement())
+  amount       Float
+  paid         Boolean  @default(false)
+  patientEmail String   @map("patient_email")
+  patient      Patient  @relation(fields: [patientEmail], references: [email])
 }

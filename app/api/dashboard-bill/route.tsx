@@ -10,18 +10,18 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const appointments = await db.appointment.findMany({
+    const bills = await db.bill.findMany({
       where: { patientEmail: email },
     });
 
-    if (!appointments || appointments.length === 0) {
+    if (!bills || bills.length === 0) {
       return NextResponse.json(
         { message: "No appointments found for this patient", appointments: [] },
         { status: 200 }
       );
     }
 
-    return NextResponse.json(appointments, { status: 200 });
+    return NextResponse.json(bills, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "Internal Server Error" },
@@ -31,24 +31,25 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { patientEmail, appointmentDetails } = await req.json();
+  const { patientEmail, bill } = await req.json();
 
-  if (!patientEmail || !appointmentDetails) {
+  if (!patientEmail || !bill) {
     return NextResponse.json(
-      { message: "Patient Email and appointment details are required" },
+      { message: "Patient Email and bill details are required" },
       { status: 400 }
     );
   }
 
   try {
-    const appointment = await db.appointment.create({
+    const newBill = await db.bill.create({
       data: {
         patientEmail: patientEmail,
-        ...appointmentDetails,
+        amount: bill,
+        paid: false,
       },
     });
 
-    return NextResponse.json(appointment, { status: 201 });
+    return NextResponse.json(newBill, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { message: "Internal Server Error" },

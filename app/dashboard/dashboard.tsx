@@ -31,7 +31,9 @@ export default function PatientDashboard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasInsurance, setHasInsurance] = useState(null);
   const [appointments, setAppointments] = useState<any[]>([]);
+  const [bills, setBills] = useState<any[]>([]);
   const [doctors, setDoctors] = useState([]);
+  const bill = null;
   const [insurance, setInsurance] = useState<{
     provider: string | null;
     id: string | null;
@@ -86,27 +88,57 @@ export default function PatientDashboard() {
         autoClose: 5000,
       });
     }
-    if (insurance === null && provider && id) {
-      // Make a POST request to the insurance API endpoint
-      const insuranceResponse = await fetch("/api/insurance", {
+
+    try {
+      let bill: number;
+      if (appointmentDetails.doctor.specialty === "OB/GYN") {
+        bill = 200;
+      } else {
+        bill = 500;
+      }
+      const response = await fetch("api/dashboard-bill", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          provider: provider,
-          id: id,
           patientEmail: email,
+          bill: bill,
         }),
       });
+    } catch (error) {
+      toast.error("An error occurred while creating the bill.", {
+        position: "top-center",
+        autoClose: 5000,
+      });
+    }
 
-      if (!insuranceResponse.ok) {
-        const errorData = await insuranceResponse.json();
-        toast.error(`Failed to add insurance! ${errorData.message || ""}`, {
-          position: "top-center",
-          autoClose: 5000,
+    if (provider && id) {
+      try {
+        // Make a POST request to the insurance API endpoint
+        const insuranceResponse = await fetch("/api/dashboard-insurance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            provider: provider,
+            id: id,
+            patientEmail: email,
+          }),
         });
-        fetchInsurance();
-      } else {
-        toast.success("Insurance added successfully!", {
+
+        if (!insuranceResponse.ok) {
+          const errorData = await insuranceResponse.json();
+          toast.error(`Failed to add insurance! ${errorData.message || ""}`, {
+            position: "top-center",
+            autoClose: 5000,
+          });
+          fetchInsurance();
+        } else {
+          toast.success("Insurance added successfully!", {
+            position: "top-center",
+            autoClose: 5000,
+          });
+        }
+      } catch (error) {
+        toast.error(`An error occurred`, {
           position: "top-center",
           autoClose: 5000,
         });
@@ -187,6 +219,25 @@ export default function PatientDashboard() {
 
       const appointments = await responseAppointments.json();
       setAppointments(appointments);
+    }
+  }, [email]);
+
+  const fetchBills = useCallback(async () => {
+    if (email) {
+      const responseBills = await fetch(
+        `/api/dashboard-bill?email=${encodeURIComponent(email)}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!responseBills.ok) {
+        throw new Error(`HTTP error! status: ${responseBills.status}`);
+      }
+
+      const appointments = await responseBills.json();
+      setBills(bills);
     }
   }, [email]);
 
@@ -518,9 +569,14 @@ export default function PatientDashboard() {
                     <Descriptions.Item label="Marital Status">
                       {patient?.marital}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Insurance">
-                      {patient?.insurance
-                        ? `ID: ${patient.insurance.id}, Company: ${patient.insurance.company}`
+                    <Descriptions.Item label="Insurance ID">
+                      {insurance
+                        ? insurance.id
+                        : "No insurance information on file"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Insurance Provider">
+                      {insurance
+                        ? insurance.provider
                         : "No insurance information on file"}
                     </Descriptions.Item>
                   </Descriptions>

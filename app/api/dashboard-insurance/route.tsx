@@ -32,7 +32,6 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
-
   try {
     const insurance = await db.insurance.create({
       data: data,
