@@ -88,7 +88,7 @@ export default function PatientDashboard() {
       });
     }
 
-    try {
+    // try {
     //   let bill: number;
     //   if (appointmentDetails.doctor.specialty === "OB/GYN") {
     //     bill = 200;
