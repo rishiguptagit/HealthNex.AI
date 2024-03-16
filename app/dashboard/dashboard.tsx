@@ -33,7 +33,6 @@ export default function PatientDashboard() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [bills, setBills] = useState<any[]>([]);
   const [doctors, setDoctors] = useState([]);
-  const bill = null;
   const [insurance, setInsurance] = useState<{
     provider: string | null;
     id: string | null;
@@ -90,26 +89,26 @@ export default function PatientDashboard() {
     }
 
     try {
-      let bill: number;
-      if (appointmentDetails.doctor.specialty === "OB/GYN") {
-        bill = 200;
-      } else {
-        bill = 500;
-      }
-      const response = await fetch("api/dashboard-bill", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          patientEmail: email,
-          bill: bill,
-        }),
-      });
-    } catch (error) {
-      toast.error("An error occurred while creating the bill.", {
-        position: "top-center",
-        autoClose: 5000,
-      });
-    }
+    //   let bill: number;
+    //   if (appointmentDetails.doctor.specialty === "OB/GYN") {
+    //     bill = 200;
+    //   } else {
+    //     bill = 500;
+    //   }
+    //   const response = await fetch("api/dashboard-bill", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       patientEmail: email,
+    //       bill: bill,
+    //     }),
+    //   });
+    // } catch (error) {
+    //   toast.error("An error occurred while creating the bill.", {
+    //     position: "top-center",
+    //     autoClose: 5000,
+    //   });
+    // }
 
     if (provider && id) {
       try {
