@@ -50,7 +50,6 @@ model Doctor {
 model Bill {
   id           Int      @id @default(autoincrement())
   amount       Float
-  paid         Boolean  @default(false)
   patientEmail String   @map("patient_email")
   patient      Patient  @relation(fields: [patientEmail], references: [email])
 }

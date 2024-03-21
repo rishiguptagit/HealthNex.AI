@@ -88,27 +88,34 @@ export default function PatientDashboard() {
       });
     }
 
-    // try {
-    //   let bill: number;
-    //   if (appointmentDetails.doctor.specialty === "OB/GYN") {
-    //     bill = 200;
-    //   } else {
-    //     bill = 500;
-    //   }
-    //   const response = await fetch("api/dashboard-bill", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       patientEmail: email,
-    //       bill: bill,
-    //     }),
-    //   });
-    // } catch (error) {
-    //   toast.error("An error occurred while creating the bill.", {
-    //     position: "top-center",
-    //     autoClose: 5000,
-    //   });
-    // }
+    try {
+      let bill: number;
+      if (appointmentDetails && appointmentDetails.doctor) {
+        if (appointmentDetails.doctor.specialty === "OB/GYN") {
+          bill = 200;
+        } else {
+          bill = 500;
+        }
+        const response = await fetch("api/dashboard-bill", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patientEmail: email,
+            bill: bill,
+          }),
+        });
+      } else {
+        toast.error("Appointment details or doctor information is missing.", {
+          position: "top-center",
+          autoClose: 5000,
+        });
+      }
+    } catch (error) {
+      toast.error("An error occurred while creating the bill.", {
+        position: "top-center",
+        autoClose: 5000,
+      });
+    }
 
     if (provider && id) {
       try {
