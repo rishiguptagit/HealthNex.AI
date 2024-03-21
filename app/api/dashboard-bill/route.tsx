@@ -45,7 +45,6 @@ export async function POST(req: NextRequest) {
       data: {
         patientEmail: patientEmail,
         amount: bill,
-        paid: false,
       },
     });
 

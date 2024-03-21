@@ -91,7 +91,8 @@ export default function PatientDashboard() {
     try {
       let bill: number;
       if (appointmentDetails && appointmentDetails.doctor) {
-        if (appointmentDetails.doctor.specialty === "OB/GYN") {
+        const doctor = JSON.parse(appointmentDetails.doctor);
+        if (doctor.specialty === "OB/GYN") {
           bill = 200;
         } else {
           bill = 500;
@@ -104,6 +105,21 @@ export default function PatientDashboard() {
             bill: bill,
           }),
         });
+        if (response.ok) {
+          toast.success("Bill created successfully!", {
+            position: "top-center",
+            autoClose: 5000,
+          });
+        } else {
+          const errorData = await response.json();
+          toast.error(
+            `Failed to create bill! ${errorData.message || ""}`,
+            {
+              position: "top-center",
+              autoClose: 5000,
+            }
+          );
+        }
       } else {
         toast.error("Appointment details or doctor information is missing.", {
           position: "top-center",
@@ -460,10 +476,16 @@ export default function PatientDashboard() {
                   <Form.Item label="Symptoms" name="symptoms">
                     <Input.TextArea placeholder="Enter your symptoms" />
                   </Form.Item>
-                  <Form.Item label="Choose Doctor" name="doctorEmail">
+                  <Form.Item label="Choose Doctor" name="doctor">
                     <Select placeholder="Select">
                       {doctors.map((doctor: any, index: number) => (
-                        <Option key={index} value={doctor.email}>
+                        <Option
+                          key={index}
+                          value={JSON.stringify({
+                            email: doctor.email,
+                            specialty: doctor.specialty,
+                          })}
+                        >
                           {doctor.name} - {doctor.specialty}
                         </Option>
                       ))}
