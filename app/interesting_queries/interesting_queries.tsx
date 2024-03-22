@@ -56,7 +56,7 @@ export default function InterestingQueries() {
       });
 
     const minTimeDate = new Date("2024-01-01");
-    const maxTimeDate = new Date("2024-12-31");
+    const maxTimeDate = new Date("2024-02-29");
 
     const minTime = minTimeDate.toISOString();
     const maxTime = maxTimeDate.toISOString();
