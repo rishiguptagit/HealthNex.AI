@@ -41,10 +41,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const doctor = JSON.parse(appointmentDetails.doctor);
     const appointment = await db.appointment.create({
       data: {
         patientEmail: patientEmail,
-        ...appointmentDetails,
+        symptoms: appointmentDetails.symptoms,
+        time: appointmentDetails.time,
+        doctorEmail: doctor.email,
+        description: appointmentDetails.description,
       },
     });
 
