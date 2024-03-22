@@ -31,7 +31,7 @@ export default function PatientDashboard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [hasInsurance, setHasInsurance] = useState(null);
   const [appointments, setAppointments] = useState<any[]>([]);
-  const [bills, setBills] = useState<any[]>([]);
+  const [totalBill, setTotalBill] = useState<any[]>([]);
   const [doctors, setDoctors] = useState([]);
   const [insurance, setInsurance] = useState<{
     provider: string | null;
@@ -258,8 +258,10 @@ export default function PatientDashboard() {
         throw new Error(`HTTP error! status: ${responseBills.status}`);
       }
 
-      const appointments = await responseBills.json();
-      setBills(bills);
+      const bills = await responseBills.json();
+      
+      const totalBill = bills.reduce((total, bill) => total + bill.amount, 0);
+      setTotalBill(totalBill);
     }
   }, [email]);
 
@@ -303,6 +305,7 @@ export default function PatientDashboard() {
         fetchAppointments();
         fetchInsurance();
         fetchDoctors();
+        fetchBills();
       } catch (error) {
         console.error(error);
       }
@@ -315,6 +318,7 @@ export default function PatientDashboard() {
     fetchAppointments,
     fetchInsurance,
     fetchDoctors,
+    fetchBills,
   ]);
 
   if (!patient) {
@@ -596,6 +600,9 @@ export default function PatientDashboard() {
                     </Descriptions.Item>
                     <Descriptions.Item label="Marital Status">
                       {patient?.marital}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Total Bill">
+                      {totalBill}
                     </Descriptions.Item>
                     <Descriptions.Item label="Insurance ID">
                       {insurance
