@@ -110,7 +110,7 @@ export default function InterestingQueries() {
         </Typography.Title>
         <Link href="/">
           <Button type="link" style={{ color: "white" }}>
-            Back to SignIn/SignUp
+            Back to SignIn / SignUp
           </Button>
         </Link>
       </Header>
