@@ -164,6 +164,7 @@ export default function PatientDashboard() {
       }
     }
     fetchAppointments();
+    fetchBills();
     setIsModalVisible(false);
   };
 

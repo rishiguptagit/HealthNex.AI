@@ -63,6 +63,8 @@ export default function SignUpPage() {
           <Image
             className="mx-auto h-20 w-auto"
             src="/healthnex.jpg"
+            width={500}
+            height={500}
             alt="HealthNex.AI"
           />
           <h2 className="mt-6 text-center text-2xl font-medium text-gray-900">
@@ -155,6 +157,14 @@ export default function SignUpPage() {
             Sign in.
           </Link>
         </p>
+        <div>
+            <Link
+              href="/interesting_queries"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-navy-600 hover:bg-navy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500"
+            >
+              Click to See 3 Interesting Queries
+            </Link>
+          </div>
       </div>
       <div className="absolute bottom-0 text-center text-sm text-gray-600 w-full pb-4 pt-4 bg-gray-300">
         &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved.
