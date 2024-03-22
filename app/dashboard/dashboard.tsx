@@ -112,13 +112,10 @@ export default function PatientDashboard() {
           });
         } else {
           const errorData = await response.json();
-          toast.error(
-            `Failed to create bill! ${errorData.message || ""}`,
-            {
-              position: "top-center",
-              autoClose: 5000,
-            }
-          );
+          toast.error(`Failed to create bill! ${errorData.message || ""}`, {
+            position: "top-center",
+            autoClose: 5000,
+          });
         }
       } else {
         toast.error("Appointment details or doctor information is missing.", {
@@ -259,8 +256,11 @@ export default function PatientDashboard() {
       }
 
       const bills = await responseBills.json();
-      
-      const totalBill = bills.reduce((total, bill) => total + bill.amount, 0);
+
+      const totalBill = bills.reduce(
+        (total: number, bill: { amount: number }) => total + bill.amount,
+        0
+      );
       setTotalBill(totalBill);
     }
   }, [email]);
