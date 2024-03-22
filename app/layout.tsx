@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "WellNex.AI",
+  title: "HealthNex.AI",
   description: "AI for healthcare",
 };
 
