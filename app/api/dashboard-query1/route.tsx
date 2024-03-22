@@ -5,13 +5,13 @@ export async function GET(req: NextRequest) {
   const providers = await db.insurance.groupBy({
     by: ['provider'],
     _count: {
-      provider: true
+      patientEmail: true
     }
   });
 
   const providerCounts = providers.map(provider => ({
     provider: provider.provider,
-    count: provider._count.provider
+    count: provider._count.patientEmail
   }));
 
   return NextResponse.json(providerCounts);
