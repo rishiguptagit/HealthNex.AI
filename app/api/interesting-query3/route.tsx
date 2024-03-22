@@ -16,23 +16,23 @@ export async function GET(req: NextRequest) {
       doctorEmail: doctorEmail,
       time: {
         gte: new Date(minTime),
-        lte: new Date(maxTime)
-      }
+        lte: new Date(maxTime),
+      },
     },
     select: {
       time: true,
       patient: {
         select: {
           firstName: true,
-          lastName: true
-        }
-      }
-    }
+          lastName: true,
+        },
+      },
+    },
   });
 
-  const appointmentDetails = appointments.map(appointment => ({
+  const appointmentDetails = appointments.map((appointment) => ({
     time: appointment.time,
-    patientName: `${appointment.patient.firstName} ${appointment.patient.lastName}`
+    patientName: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
   }));
 
   return NextResponse.json(appointmentDetails);

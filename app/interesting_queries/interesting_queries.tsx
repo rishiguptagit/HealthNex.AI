@@ -58,8 +58,8 @@ export default function InterestingQueries() {
     const minTimeDate = new Date("2024-01-01");
     const maxTimeDate = new Date("2024-12-31");
 
-    const minTime = `${minTimeDate.getHours()}:${minTimeDate.getMinutes()}:${minTimeDate.getSeconds()}`;
-    const maxTime = `${maxTimeDate.getHours()}:${maxTimeDate.getMinutes()}:${maxTimeDate.getSeconds()}`;
+    const minTime = minTimeDate.toISOString();
+    const maxTime = maxTimeDate.toISOString();
 
     const params2 = new URLSearchParams({
       email: "harvey.van den berg@hospital.com",
@@ -167,7 +167,10 @@ export default function InterestingQueries() {
                 </p>
                 {Array.isArray(query3Results) ? (
                   query3Results.map((result: any, index: number) => (
-                    <p key={index}>{result}</p>
+                    <div key={index}>
+                      <p>Time: {new Date(result.time).toLocaleString()}</p>
+                      <p>Patient Name: {result.patientName}</p>
+                    </div>
                   ))
                 ) : (
                   <p>No results found for Query 3</p>
