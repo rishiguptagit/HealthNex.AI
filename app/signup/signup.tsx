@@ -63,7 +63,7 @@ export default function SignUpPage() {
           <Image
             className="mx-auto h-20 w-auto"
             src="/healthnex.jpg"
-            alt="WellNex.AI"
+            alt="HealthNex.AI"
           />
           <h2 className="mt-6 text-center text-2xl font-medium text-gray-900">
             Create an account at HealthNex.AI

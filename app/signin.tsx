@@ -57,7 +57,7 @@ export default function SignInPage() {
           <Image
             className="mx-auto h-20 w-auto"
             src="/healthnex.jpg"
-            alt="WellNex.AI"
+            alt="HealthNex.AI"
             width={500}
             height={300}
           />
