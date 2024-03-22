@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "../db";
+import { min } from "moment";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -10,6 +11,8 @@ export async function GET(req: NextRequest) {
   if (!doctorEmail || !minTime || !maxTime) {
     return NextResponse.error();
   }
+
+  console.log(doctorEmail, minTime, maxTime);
 
   const appointments = await db.appointment.findMany({
     where: {
