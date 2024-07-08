@@ -371,11 +371,11 @@ export default function PatientDashboard() {
         >
           <Image
             src="/healthnex.jpg"
-            alt="HealthNex.AI"
+            alt="HealthNex"
             width={50}
             height={50}
           />
-          HealthNex.AI
+          HealthNex
         </Typography.Title>
         <Link href="/">
           <Button type="link" style={{ color: "white" }}>
@@ -624,7 +624,7 @@ export default function PatientDashboard() {
       </Content>
       <Footer style={{ textAlign: "center" }}>
         {"© "}
-        {new Date().getFullYear()} HealthNex.AI. All rights reserved.
+        {new Date().getFullYear()} HealthNex. All rights reserved.
       </Footer>
     </Layout>
   );

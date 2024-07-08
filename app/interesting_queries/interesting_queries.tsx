@@ -102,11 +102,11 @@ export default function InterestingQueries() {
         >
           <Image
             src="/healthnex.jpg"
-            alt="HealthNex.AI"
+            alt="HealthNex"
             width={50}
             height={50}
           />
-          HealthNex.AI
+          HealthNex
         </Typography.Title>
         <Link href="/">
           <Button type="link" style={{ color: "white" }}>

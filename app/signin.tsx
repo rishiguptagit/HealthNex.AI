@@ -57,12 +57,12 @@ export default function SignInPage() {
           <Image
             className="mx-auto h-20 w-auto"
             src="/healthnex.jpg"
-            alt="HealthNex.AI"
+            alt="HealthNex"
             width={500}
             height={300}
           />
           <h2 className="mt-6 text-center text-2xl font-medium text-gray-900">
-            Sign in to HealthNex.AI
+            Sign in to HealthNex
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -129,7 +129,7 @@ export default function SignInPage() {
         </div>
       </div>
       <div className="absolute bottom-0 text-center text-sm text-gray-600 w-full pb-4 pt-4 bg-gray-300">
-        &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved.
+        &copy; {new Date().getFullYear()} HealthNex. All rights reserved.
       </div>
     </div>
   );

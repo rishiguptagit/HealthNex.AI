@@ -65,10 +65,10 @@ export default function SignUpPage() {
             src="/healthnex.jpg"
             width={500}
             height={500}
-            alt="HealthNex.AI"
+            alt="HealthNex"
           />
           <h2 className="mt-6 text-center text-2xl font-medium text-gray-900">
-            Create an account at HealthNex.AI
+            Create an account at HealthNex
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -167,7 +167,7 @@ export default function SignUpPage() {
           </div>
       </div>
       <div className="absolute bottom-0 text-center text-sm text-gray-600 w-full pb-4 pt-4 bg-gray-300">
-        &copy; {new Date().getFullYear()} HealthNex.AI. All rights reserved.
+        &copy; {new Date().getFullYear()} HealthNex. All rights reserved.
       </div>
     </div>
   );
